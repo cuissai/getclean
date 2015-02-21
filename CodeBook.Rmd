@@ -1,0 +1,211 @@
+---
+title: "CodeBook"
+author: "cuissai"
+date: "Thursday, February 21, 2015"
+output: html_document
+---
+# Code Book
+##goal
+ Merge both data set training and test in one Dataset, renaming some columns and labels columns according to the given data. Create an tidy data file.
+
+### Files description
+in the working directory we have all data files in an folder named Dataset
+
+- 30 subjects (subjects dataset, subject_train.txt, subject_test.txt)
+
+- 6 activities (activity_labels.txt)(Y_dataset, Y_train.txt and Y_test.text)
+
+- sensors are generating data (X_dataset, X_train.txt and X_test.txt)
+
+- 561 features are followed (features.txt)
+
+- two groups of subjects for training (70%) and testing (30%)
+
+- training group is generating "subject" "x" and "y" data sets
+
+- testing group is generating "subject" "x" and "y" data sets
+
+
+##  description of the Dataset folder
+
+### activity_labels.txt
+names variables
+
+* IndexActivity -> link with index activity in y_test.txt and y_train.txt
+
+* Activity -> activity labels for named row in y_test.txt and y_train.txt
+
+* activity_labels data.frame:        6 obs. of  2 variables:
+
+* $ IndexActivity: int  1 2 3 4 5 6
+
+* $ Activity     : Factor w/ 6 levels "LAYING","SITTING",..: 4 6 5 2 3 1
+
+* 1 WALKING
+* 2 WALKING_UPSTAIRS
+* 3 WALKING_DOWNSTAIRS
+* 4 SITTING
+* 5 STANDING
+* 6 LAYING
+
+### features.txt
+names variables
+
+* Index_features -> link with colums numero in X_test.txt and X_train.txt
+
+* labels_features -> labels for named colums in X_test.txt and X_train.txt
+
+* list_features data frame :        561 obs. of  2 variables:
+
+* $ index_features : int  1 2 3 4 5 6 7 8 9 10 ...
+
+* $ labels_features: Factor w/ 477 levels "angle(tBodyAccJerkMean),gravityMean)",..: 243 244 245 250 251 252 237 238 239 240 ...
+
+* meansd_feature logical vector [1:561] TRUE TRUE TRUE TRUE TRUE TRUE ... features with mean and standard deviation in their name are TRUE
+
+signals X Y Z
+
+* tBodyAcc-XYZ
+
+* tGravityAcc-XYZ
+
+* tBodyAccJerk-XYZ
+
+* tBodyGyro-XYZ
+
+* tBodyGyroJerk-XYZ
+
+* tBodyAccMag
+
+* tGravityAccMag
+
+* tBodyAccJerkMag
+
+* tBodyGyroMag
+
+* tBodyGyroJerkMag
+
+* fBodyAcc-XYZ
+
+* fBodyAccJerk-XYZ
+
+* fBodyGyro-XYZ
+
+* fBodyAccMag
+
+* fBodyAccJerkMag
+
+* fBodyGyroMag
+
+* fBodyGyroJerkMag
+
+variables that were estimated from these signals
+
+* mean(): Mean value
+
+* std(): Standard deviation
+
+* mad(): Median absolute deviation 
+
+* max(): Largest value in array
+
+* min(): Smallest value in array
+
+* sma(): Signal magnitude area
+
+* energy(): Energy measure. Sum of the squares divided by the number of values. 
+
+* iqr(): Interquartile range 
+
+* entropy(): Signal entropy
+
+* arCoeff(): Autorregresion coefficients with Burg order equal to 4
+
+* correlation(): correlation coefficient between two signals
+
+* maxInds(): index of the frequency component with largest magnitude
+
+* meanFreq(): Weighted average of the frequency components to obtain a mean frequency
+
+* skewness(): skewness of the frequency domain signal 
+
+* kurtosis(): kurtosis of the frequency domain signal 
+
+* bandsEnergy(): Energy of a frequency interval within the 64 bins of the FFT of each 
+window.
+
+* angle(): Angle between to vectors.
+
+Additional vectors obtained by averaging the signals in a signal window sample. These 
+are used on the angle() variable:
+
+* gravityMean
+
+* tBodyAccMean
+
+* tBodyAccJerkMean
+
+* tBodyGyroMean
+
+* tBodyGyroJerkMean
+
+##  description of the dataset/test and Dataset/train folder
+
+### subject_test.txt and subject_train.txt
+names variables
+
+* $subject -> numero of subject, link with row numero in X_test.txt and X_train.txt
+
+* subject_train data.frame:        7352 obs. of  1 variable:
+ $ Subject: int  1 1 1 1 1 1 1 1 1 1 ...
+
+* subject_test data.frame:        2947 obs. of  1 variable:
+ $ Subject: int  2 2 2 2 2 2 2 2 2 2 ...
+
+merge both data frame subject_train and subject_test in one dataset
+
+* subject data.frame:        10299 obs. of  1 variable:
+ $ Subject: int  1 1 1 1 1 1 1 1 1 1 ...
+
+
+### y_test.txt and y_train.txt
+
+names variables
+
+* $IndexActivity -> link with index activity in activity_labels data frame
+
+* $Activity -> activity labels for named row in activities data frame 
+
+* train_activities data.frame:        7352 obs. of  1 variable:
+ $ IndexActivity: int  5 5 5 5 5 5 5 5 5 5 ...
+
+* test_activities data.frame:        2947 obs. of  1 variable:
+ $ IndexActivity: int  5 5 5 5 5 5 5 5 5 5 ...
+
+* activities data.frame:        10299 obs. of  1 variable:
+ $ Activity: Factor w/ 6 levels "LAYING","SITTING",..: 3 3 3 3 3 3 3 3 3 3 ...
+
+
+### X_test.txt and X_train.txt
+
+* Data_train data.frame:        7352 obs. of  561 variables:
+ $ V1  : num  0.289 0.278 0.28 0.279 0.277 ...
+ $ V2  : num  -0.0203 -0.0164 -0.0195 -0.0262 -0.0166 ...
+
+* Data_test data.frame:        2947 obs. of  561 variables:
+ $ V1  : num  0.257 0.286 0.275 0.27 0.275 ...
+ $ V2  : num  -0.0233 -0.0132 -0.0261 -0.0326 -0.0278 ...
+
+merge both data frame Data_train and Data_test in one dataset with features labels
+
+*  dataset data.frame:        10299 obs. of  561 variables:
+ $ tBodyAcc-mean()-X                   : num  0.289 0.278 0.28 0.279 0.277 ...
+ $ tBodyAcc-mean()-Y                   : num  -0.0203 -0.0164 -0.0195 -0.0262 -0.0166 ...
+
+Select just features contain mean and sd
+
+* datasubset data.frame:        10299 obs. of  66 variables:
+ $ tBodyAcc-mean()-X          : num  0.289 0.278 0.28 0.279 0.277 ...
+ $ tBodyAcc-mean()-Y          : num  -0.0203 -0.0164 -0.0195 -0.0262 -0.0166 ...
+ $ tBodyAcc-mean()-Z          : num  -0.133 -0.124 -0.113 -0.123 -0.115 ...
+

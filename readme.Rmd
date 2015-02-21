@@ -1,0 +1,105 @@
+---
+title: "readme"
+author: "cuissai"
+date: "Thursday, February 19, 2015"
+output: html_document
+---
+
+
+###Objective:
+Clean and merge all data in one tidy set of data. With features that include mean and standard deviation.
+
+- plyr used for the junction
+- reshape2 used to melt () and dcast ()
+
+
+
+The initial data and Tidy_dataset.txt file are in the Dataset file
+
+*  activity_labels.txt
+*  features.txt
+*  subject_test.txt
+*  subject_train.txt
+*  X_test.txt
+*  X_train.txt
+*  y_test.txt
+*  y_train.txt
+* Tidy_dataset.txt
+
+# the five steps
+
+Read and merge with rbin () test and training observations  X_train.txt  X_test.txt in a data frame dataset.
+
+The labels of features, features.txt select those containing mean and standard deviation with Grepl ()
+
+Transforming dataset into subsets for features content mean or standard deviation.
+
+Read and merge with rbin () activities y_train.txt activities y_test.txt  in a data frame.
+
+Read labels for activities in activity_labels and join the two data frames for labels in the dataset.
+
+Join all data in TidyDataSet with reshape2 library and melt (), dcast ().
+
+Outputs of all tidy data TidyDataSet.txt with write.table ()
+
+Run_analysis function can build all tidy data.
+
+#1-Merges the training and the test sets to create one data set.
+
+        run_analysis<-function(){
+        #1-Merges the training and the test sets to create one data set.        
+        #Read X_train.txt and X_test.txt, both datasets for train and test experiences.
+        #Merge training and test data into single data frame
+        Data_train <- read.table("./Dataset/train/X_train.txt")
+        Data_test <- read.table("./Dataset/test/X_test.txt")
+        dataset <- rbind(Data_train,Data_test)
+
+#2-Extracts only the measurements on the mean and standard deviation for each measurement.         
+        #Read features.txt, this list of features is the labels names of the dataset columns
+        list_features <- read.table("./Dataset/features.txt", col.names=c("index_features", "labels_features"))
+        #vector character containing labels from list_features data frame
+        labels_features <- list_features$labels_features
+                 ##logical vector for select features have mean or std in their name
+                meansd_features <- grepl('mean\\(\\)|std\\(\\)',labels_features)
+                        #Rename columns in dataset, names match row list_features/col dataset 
+                         colnames(dataset) <- labels_features
+                        ##select datasubstet with features content mean and std, from dataset with the logical vector subset_features.
+                        datasubset <- dataset[,meansd_features]
+        
+#3- Uses descriptive activity names to name the activities in the data set
+        #Read y_train.txt and y_test.txt, both datasets for train and test index activities.
+        #Merge training and test data into single data frame (in order first train activities, second test activities)
+        #rename column to "IndexActivity"
+        train_activities <- read.table("./Dataset/train/Y_train.txt", col.names=c("IndexActivity"))
+        test_activities <- read.table("./Dataset/test/Y_test.txt", col.names=c("IndexActivity"))
+        activities <- rbind(train_activities,test_activities)
+                ## activity values with descriptive names using the activity_labels.txt file 
+                activity_labels<-read.table("./Dataset/activity_labels.txt",col.names=c("IndexActivity","Activity"))
+                library(dplyr)
+                activities<-left_join(activities,activity_labels,by="IndexActivity")
+                #Drop activity index
+                activities$IndexActivity <- NULL
+        
+#4- Appropriately labels the data set with descriptive variable names. 
+        #Read subjects ids for train and test Dataset
+        #and merge into a single col (in order first train subjects, second test subjects)
+        subject_train <- read.table("./Dataset/train/subject_train.txt", col.names=c("Subject"))
+        subject_test <- read.table("./Dataset/test/subject_test.txt", col.names=c("Subject"))
+        subject <- rbind(subject_train, subject_test)
+        
+        # Also we have Activity and all features which content mean or sd
+        
+        
+#5-From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+        #Merge activities, Subjects, Features of measures, and data, all into one data frame
+        TidyDataSet <- cbind(subject, activities, datasubset)
+        library(reshape2)
+        #Melt data frame for reshaping
+        TidyDataSet <- melt(datasubset, id=c("Subject", "Activity"), measure.vars=list_feature_meansd)
+        #tidy data frame by mean using the reshape2 package
+        TidyDataSet <- dcast(TidyDataSet, Subject + Activity ~ variable, mean)
+        #Order by Subject And Activity
+        TidyDataSet <- TidyDataSet[order(TidyDataSet$Subject, TidyDataSet$Activity),]
+        #Output file create a txt file with write.table()
+        write.table(TidyDataSet,file="./Dataset/tidy_dataset2.txt",row.name = FALSE) 
+}
